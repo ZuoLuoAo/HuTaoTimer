@@ -1,0 +1,13 @@
+# Python
+__pycache__/
+*.pyc
+
+# 用户数据 / 日志
+data.json
+debug.log
+
+# 系统文件
+*.lnk
+
+# Claude Code 本地配置
+.claude/settings.local.json
