@@ -1,0 +1,50 @@
+{
+  "settings": {
+    "work_minutes": 5,
+    "work_seconds": 5,
+    "break_minutes": 5
+  },
+  "tasks": [
+    {
+      "id": 1,
+      "title": "记单词",
+      "target": 1,
+      "completed_pomodoros": 1,
+      "done": false,
+      "created": "2026-05-26T14:16:14.039169"
+    }
+  ],
+  "history": {
+    "2026-05-26": [
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T13:48:02.175346"
+      },
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T13:52:14.104721"
+      },
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T13:52:27.837784"
+      },
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T13:59:30.934027"
+      },
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T14:09:11.150450"
+      },
+      {
+        "task_id": 1,
+        "completed_at": "2026-05-26T14:41:19.468773"
+      },
+      {
+        "task_id": null,
+        "completed_at": "2026-05-26T15:21:15.021906"
+      }
+    ]
+  },
+  "next_task_id": 2
+}
