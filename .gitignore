@@ -11,3 +11,8 @@ debug.log
 
 # Claude Code 本地配置
 .claude/settings.local.json
+
+# PyInstaller 构建产物
+build/
+dist/
+*.spec
