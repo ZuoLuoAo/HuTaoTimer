@@ -1,22 +1,33 @@
 ﻿# -*- coding: utf-8 -*-
 """胡桃钟 - Python + Tkinter 实现"""
-import tkinter as tk
-from tkinter import ttk, messagebox
 import ctypes
 import json
 import sys
 from datetime import datetime, date, timedelta
 from pathlib import Path
 
-try:
-    import winsound
-except ImportError:
-    winsound = None
+# 必须在 tkinter 导入前设置，否则任务栏会显示 Python 图标和名称
+if sys.platform == "win32":
+    try:
+        ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("hutaozhong.pomodoro.app")
+    except Exception:
+        pass
 
+import tkinter as tk
+from tkinter import ttk, messagebox
+
+try:
+    import winsound  # Windows 系统提示音模块
+except ImportError:
+    winsound = None  # 非 Windows 系统回退
+
+# PyInstaller 打包后 exe 所在目录为数据目录，否则为脚本所在目录
 if getattr(sys, "frozen", False):
     DATA_DIR = Path(sys.executable).parent
+    RESOURCE_DIR = Path(sys._MEIPASS)
 else:
     DATA_DIR = Path(__file__).resolve().parent
+    RESOURCE_DIR = DATA_DIR
 DATA_FILE = DATA_DIR / "data.json"
 
 DEFAULT_SETTINGS = {
@@ -80,9 +91,15 @@ class PomodoroApp:
         self.root.geometry("540x640")
         self.root.minsize(500, 600)
 
-        icon_path = DATA_DIR / "icon.ico"
+        icon_path = RESOURCE_DIR / "assets" / "icon.ico"
         if icon_path.exists():
             self.root.iconbitmap(str(icon_path))
+
+        # 设置任务栏图标（iconphoto 解决固定到任务栏时显示默认图标的问题）
+        png_path = RESOURCE_DIR / "assets" / "图标_胡桃.png"
+        if png_path.exists():
+            self.icon_image = tk.PhotoImage(file=str(png_path))
+            self.root.iconphoto(True, self.icon_image)
 
         self.data = load_data()
         self.settings = self.data["settings"]
@@ -311,13 +328,14 @@ class PomodoroApp:
         self.current_task_label.config(text="当前任务: 无")
 
     def _play_alert_sound(self):
+        """循环播放提示音（每 1.2 秒重复），直到用户确认"""
         if not self._alert_active:
             return
         if winsound is not None:
             try:
                 winsound.PlaySound(
-                    "SystemExclamation",
-                    winsound.SND_ALIAS | winsound.SND_ASYNC,
+                    "SystemExclamation",  # 系统感叹号音效
+                    winsound.SND_ALIAS | winsound.SND_ASYNC,  # 别名方式 + 异步播放
                 )
             except Exception:
                 self.root.bell()
@@ -331,7 +349,7 @@ class PomodoroApp:
             self._alert_job = None
         if winsound is not None:
             try:
-                winsound.PlaySound(None, winsound.SND_PURGE)
+                winsound.PlaySound(None, winsound.SND_PURGE)  # SND_PURGE 停止当前播放
             except Exception:
                 pass
 
@@ -387,6 +405,7 @@ class PomodoroApp:
         self._refresh_stats()
         self._update_display()
 
+        # 工作→休息：确认后自动开始休息倒计时；休息→工作：需手动开始
         self._auto_start_after_ack = finished_work
         self._alert_active = True
         self._show_alert_window(msg)
@@ -597,12 +616,11 @@ class PomodoroApp:
 
 
 def main():
-    ctypes.windll.shell32.SetCurrentProcessExplicitAppUserModelID("hutaozhong.app")
     root = tk.Tk()
     try:
         style = ttk.Style()
         if "vista" in style.theme_names():
-            style.theme_use("vista")
+            style.theme_use("vista")  # Vista 主题更接近现代控件样式
     except Exception:
         pass
     app = PomodoroApp(root)
