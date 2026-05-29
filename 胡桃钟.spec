@@ -2,10 +2,19 @@
 
 
 a = Analysis(
-    ['pomodoro.py'],
+    ['pomodoro/main.py'],
     pathex=[],
-    binaries=[],
-    datas=[('assets/icon.ico', 'assets'), ('assets/图标_胡桃.png', 'assets')],
+    binaries=[
+        ('D:/APPS/Anaconde/Library/bin/ffi.dll', '.'),
+        ('D:/APPS/Anaconde/Library/bin/libcrypto-3-x64.dll', '.'),
+        ('D:/APPS/Anaconde/Library/bin/liblzma.dll', '.'),
+        ('D:/APPS/Anaconde/Library/bin/libbz2.dll', '.'),
+    ],
+    datas=[
+        ('assets/icon.ico', 'assets'),
+        ('assets/图标_胡桃.png', 'assets'),
+        ('pomodoro/resources/style.qss', 'pomodoro/resources'),
+    ],
     hiddenimports=[],
     hookspath=[],
     hooksconfig={},
